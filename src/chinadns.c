@@ -806,8 +806,17 @@ static int should_filter_query(ns_msg msg, struct in_addr dns_addr) {
           return 1;
         }
       }
-    } else if (type == ns_t_aaaa || type == ns_t_ptr) {
-      // if we've got an IPv6 result or a PTR result, pass
+    } else if (type == ns_t_aaaa) {
+      // got an ipv6 result, pass
+        if (dns_is_chn) {
+          // filter ipv6 result from chn dns
+          return 1;
+        } else {
+          // pass ipv6 result from foreign dns
+          return 0;
+        }
+    } else if (type == ns_t_ptr) {
+      // if we've got a PTR result, pass
       return 0;
     }
   }
